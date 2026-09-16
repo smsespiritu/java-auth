@@ -1,0 +1,39 @@
+Act as an expert Java Backend Engineer. Generate a complete, production-ready Spring Boot (Java 17+, Maven) REST API boilerplate tailored for Replit. 
+
+The application must implement robust authentication and authorization using Spring Security 6+ and JWT.
+
+Please include the following features, structures, and files:
+
+### 1. Core Architecture & Dependencies
+- **Build Tool:** Maven (`pom.xml`) with dependencies for: Spring Web, Spring Security, Spring Data JPA, H2 Database (for easy Replit setup), Lombok, Validation, and JJWT (Java JWT) for token management.
+- **Project Structure:** Organized logically into packages: `config`, `controller`, `model`, `repository`, `service`, `dto`, and `security`.
+
+### 2. Database & Models
+- **User Entity:** `id`, `email`, `password`, `enabled` (boolean), `verificationToken`, `passwordResetToken`, and `roles` (Set of Roles/Enums).
+- **Role Enum:** `ROLE_USER`, `ROLE_ADMIN`.
+- **Employee Entity:** `id`, `firstName`, `lastName`, `email`, `department` (for testing Admin-only endpoints).
+
+### 3. Authentication & Security (JWT)
+- **Spring Security Configuration:** Disables CSRF, sets session management to stateless, and configures an authentication filter.
+- **JWT Utilities:** Class to generate, parse, and validate JWT access tokens.
+- **Security Filter:** A custom filter extending `OncePerRequestFilter` to intercept requests, validate the JWT from the `Authorization: Bearer <token>` header, and set the security context.
+
+### 4. REST Endpoints & Logic
+Create controllers with proper DTOs for requests and responses:
+- **Public Auth Endpoints (`/api/auth/*`):**
+  - `POST /signup`: Registers a user (disabled by default) and generates a mock email verification token.
+  - `GET /verify-email?token=...`: Verifies the token and enables the user account.
+  - `POST /login`: Validates credentials and returns a JWT token.
+  - `POST /forgot-password`: Generates a reset token (simulating an email send).
+  - `POST /reset-password`: Accepts the token and new password to update the user record.
+- **Admin-Only Endpoints (`/api/admin/*`):**
+  - `POST /employees`: Accessible **only** to users with `ROLE_ADMIN`. Creates and saves an employee record.
+
+### 5. Mock Email Verification Service
+- Since this runs on Replit, create an `EmailService` interface and a `MockEmailServiceImpl` that prints the verification and reset links/tokens directly to the Replit console log instead of connecting to a real SMTP server.
+
+### 6. Configuration & Setup
+- `application.properties`: Configure the H2 in-memory database, enable the H2 console, and provide a placeholder secret key for JWT.
+- `Main.java`: The standard Spring Boot application entry point.
+
+Ensure all code handles exceptions gracefully (e.g., User Already Exists, Invalid Credentials) and returns clean JSON error responses. Provide complete code files without placeholders or cut-offs so it runs immediately on Replit.
